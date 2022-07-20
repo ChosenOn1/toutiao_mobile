@@ -1,4 +1,4 @@
-// 存储数据
+// 存储token数据
 export const setItem = (key, value) => {
   // 将数组、对象类型的数据转换为 JSON 格式字符串进行储存
   if (typeof value === 'object') {
@@ -7,7 +7,7 @@ export const setItem = (key, value) => {
   window.localStorage.setItem(key, value)
 }
 
-// 获取数据
+// 获取token数据
 export const getItem = (key) => {
   const data = window.localStorage.getItem(key)
   try {
