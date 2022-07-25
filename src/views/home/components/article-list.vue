@@ -14,11 +14,11 @@
         errpr-text="请求失败，点击重新加载"
         @load="onLoad"
       >
-        <van-cell
-          v-for="(item, index) in list"
+        <article-item
+          v-for="(article, index) in list"
           :key="index"
-          :title="item.title"
-        />
+          :article="article"
+        ></article-item>
       </van-list>
     </van-pull-refresh>
   </div>
@@ -26,7 +26,9 @@
 
 <script>
 import { getArticles } from '@/api/article.js'
+import ArticleItem from '@/components/article-item'
 export default {
+  components: { ArticleItem },
   props: {
     channel: {
       type: Object,
@@ -62,7 +64,6 @@ export default {
           timestamp: this.timestamp || Date.now(),
           with_top: 1
         })
-        console.log(data)
         // 把请求结果数据放到list数组中
         const { results } = data.data
         // 数组中的展开操作符，它会把数组元素一个一个拿出来
@@ -119,4 +120,9 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.article-list {
+  height: 79vh;
+  overflow: auto;
+}
+</style>

@@ -9,6 +9,7 @@
         size="small"
         round
         icon="search"
+        to="/search"
         >搜索
       </van-button>
     </van-nav-bar>
@@ -23,35 +24,82 @@
         <articleList :channel="channel"></articleList>
       </van-tab>
       <div slot="nav-right" class="placeholder"></div>
-      <div slot="nav-right" class="hamburger-btn">
+      <div
+        slot="nav-right"
+        class="hamburger-btn"
+        @click="isChennelEditShow = true"
+      >
         <i class="toutiao toutiao-gengduo"></i>
       </div>
     </van-tabs>
+
+    <!-- close-icon-position="top-left" 弹出层关闭图标的位置(左上角) -->
+    <van-popup
+      v-model="+"
+      closeable
+      position="bottom"
+      close-icon-position="top-left"
+      :style="{ height: '100%' }"
+    >
+      <!-- 弹出层里面的内容 -->
+      <channel-edit
+        :my-channels="channels"
+        :active="active"
+        @update-active="onUpdateActive"
+      />
+    </van-popup>
   </div>
 </template>
 
 <script>
 import { getUserChannels } from '@/api/user.js'
 import articleList from '@/views/home/components/article-list'
+import ChannelEdit from '@/views/home/components/channel-edit'
+import { getItem } from '@/utils/storage.js'
+import { mapState } from 'vuex'
 export default {
-  components: { articleList },
+  components: { articleList, ChannelEdit },
   data() {
     return {
       active: 0,
-      channels: {}
+      channels: [],
+      isChennelEditShow: false
     }
   },
   created() {
     this.loadChannels()
   },
+  computed: {
+    ...mapState(['user'])
+  },
   methods: {
     async loadChannels() {
       try {
-        const { data } = await getUserChannels()
-        this.channels = data.data.channels
+        let channels = []
+        const localChannels = getItem('TOUTIAO_CHANNELS')
+        if (this.user || !localChannels) {
+          // 已登录账号 或者 本地没有存储 就发送数据获取后端数据
+          const { data } = await getUserChannels()
+          this.channels = data.data.channels
+          return false
+        } else {
+          // 未登录并且本地有数据，就从本地获取数据
+          channels = localChannels
+        }
+
+        // 将数据更新到组件中
+        this.channels = channels
+        console.log(this.channels)
       } catch (err) {
-        this.$toast('获取频道数据失败')
+        console.log(err)
+        this.$toast('数据获取失败')
       }
+    },
+
+    onUpdateActive(index, isChennelEditShow = true) {
+      this.active = index
+      // 关闭编辑频道弹层
+      this.isChennelEditShow = isChennelEditShow
     }
   }
 }
