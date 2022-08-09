@@ -9,7 +9,9 @@
           <span class="name"> {{ userInfo.name }} </span>
         </div>
         <div class="right">
-          <van-button type="default" size="mini" round>编辑资料</van-button>
+          <van-button type="default" size="mini" to="/user/profile" round>
+            编辑资料
+          </van-button>
         </div>
       </div>
       <!-- 粉丝、关注 -->
@@ -149,7 +151,7 @@ export default {
     .base {
       height: 231px;
       padding: 76px 32px 23px;
-      background: rgb(153, 49, 49);
+      background: #F7971D;
       display: flex;
       justify-content: space-between;
       align-items: center;

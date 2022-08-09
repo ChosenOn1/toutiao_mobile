@@ -35,7 +35,7 @@
 
     <!-- close-icon-position="top-left" 弹出层关闭图标的位置(左上角) -->
     <van-popup
-      v-model="+"
+      v-model="isChennelEditShow"
       closeable
       position="bottom"
       close-icon-position="top-left"
